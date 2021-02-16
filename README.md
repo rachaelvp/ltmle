@@ -1,14 +1,14 @@
-# `ltmle` fork
+# ltmle 
 
-A forked repository of the `R` package for Longitudinal Targeted Maximum 
-Likelihood Estimation.
+Development version of forked repository for Longitudinal Targeted Maximum 
+Likelihood Estimation `R` package.
 
 -----
 
 ## Description
 
-The development branch ("devel") of this forked `ltmle` repository forces the 
-following:
+The development branch ("rvp-devel") of this forked `ltmle` repository forces 
+the following:
 - Stratified cross-validation for binary outcomes. 
 - Adaptive selection of the number of V cross-validation folds that is based on 
   the effective sample size.
@@ -23,7 +23,7 @@ and/or `stratifyCV`) are `NULL`.
 ## Installation
 
 ``` r
-devtools::install_github("rachaelvp/ltmle@devel")
+devtools::install_github("rachaelvp/ltmle@rvp-devel")
 ```
 -----
 
