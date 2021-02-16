@@ -1780,6 +1780,8 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
         #estimate using SuperLearner
         newX.list <- GetNewX(newdata)
         SetSeedIfRegressionTesting()
+        inputs$SL.cvControl$stratifyCV <- length(unique(Y.subset)) == 2
+        inputs$SL.cvControl$V <- chooseV(Y.subset)
         try.result <- try({
           SuppressGivenWarnings(m <- SuperLearner::SuperLearner(Y=Y.subset, X=X.subset, SL.library=SL.library, cvControl=inputs$SL.cvControl, verbose=FALSE, family=family, newX=newX.list$newX, obsWeights=observation.weights.subset, id=id.subset, env = environment(SuperLearner::SuperLearner)), c("non-integer #successes in a binomial glm!", "prediction from a rank-deficient fit may be misleading"))
         })
@@ -2676,3 +2678,28 @@ Default.SL.Library <- list("SL.glm",
                            c("SL.step.interaction", "screen.corP"),
                            c("SL.bayesglm", "screen.corP")
 )
+
+chooseV <- function(Y){
+  
+  # calculate effective sample size
+  if(length(unique(Y)) == 2){
+    n.rare <- min(c(sum(Y == unique(Y)[1]), sum(Y == unique(Y)[2])))
+    n.eff <- min(n, 5 * n.rare)
+  } else {
+    n.eff <- n
+  }
+  
+  # select appropriate number of folds for V-fold cross-validation
+  if(n.eff < 30){
+    V <- n - 1
+  } else if (n.eff >= 30 & n.eff < 500){
+    V <- 20
+  } else if (n.eff >= 500 & n.eff < 5000){
+    V <- 10
+  } else if (n.eff >= 5000 & n.eff < 10000){
+    V <- 5
+  } else if (n.eff >= 10000){
+    V <- 3
+  }
+  return(V)
+}
