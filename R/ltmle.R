@@ -1916,7 +1916,7 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
     family <- quasibinomial()
   } else {
     if (!is.null(offst)) stop("offset in formula not supported with SuperLearner")
-    colnames(X) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
+    # colnames(X) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
     X <- as.data.frame(X)
     if (IsBinary(Y)) {
       family <- binomial()
