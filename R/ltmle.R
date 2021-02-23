@@ -1833,7 +1833,7 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
     new.mod.frame <- model.frame(f, data = newdata1, drop.unused.levels = TRUE, na.action = na.pass)
     newX.temp <- model.matrix(terms(f), new.mod.frame)
     if (!use.glm) {
-      # colnames(newX.temp) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
+      colnames(newX.temp) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
     }
     new.subs <- !rowAnyMissings(newX.temp) #remove NA values from newdata - these will output to NA anyway and cause errors in SuperLearner
     newX <- as.data.frame(newX.temp[new.subs, , drop=FALSE])
@@ -1916,7 +1916,7 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
     family <- quasibinomial()
   } else {
     if (!is.null(offst)) stop("offset in formula not supported with SuperLearner")
-    # colnames(X) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
+    colnames(X) <- make.names(colnames(X), T) #change to temp colnames to avoid problems in some SL libraries; SL.gam has problems with names like (Intercept)
     X <- as.data.frame(X)
     if (IsBinary(Y)) {
       family <- binomial()
