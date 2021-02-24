@@ -1780,8 +1780,15 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
         #estimate using SuperLearner
         newX.list <- GetNewX(newdata)
         SetSeedIfRegressionTesting()
+        # ======================================================================
+        # force stratified CV when DV is binary
         inputs$SL.cvControl$stratifyCV <- length(unique(Y.subset)) == 2
+        # automatically set V based on effective sample size
         inputs$SL.cvControl$V <- chooseV(Y.subset)
+        # remove Intercept column
+        newX.list$newX <- newX.list$newX[, !grepl("Intercept", colnames(newX.list$newX))]
+        X.subset <- X.subset[, !grepl("Intercept", colnames(X.subset))]
+        # ======================================================================
         try.result <- try({
           SuppressGivenWarnings(m <- SuperLearner::SuperLearner(Y=Y.subset, X=X.subset, SL.library=SL.library, cvControl=inputs$SL.cvControl, verbose=FALSE, family=family, newX=newX.list$newX, obsWeights=observation.weights.subset, id=id.subset, env = environment(SuperLearner::SuperLearner)), c("non-integer #successes in a binomial glm!", "prediction from a rank-deficient fit may be misleading"))
         })
@@ -1842,6 +1849,7 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
       X.subset <<- cbind(X.subset, ltmle.added.constant=1)
       newX <- cbind(newX, ltmle.added.constant=1)
     }
+    newX <- newX[,!(colnames(newX) %in% c("Intercept", "(Intercept)"))]
     return(list(newX=newX, new.subs=new.subs))
   }
 
