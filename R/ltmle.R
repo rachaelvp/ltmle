@@ -1783,8 +1783,10 @@ Estimate <- function(inputs, form, subs, type, nodes, Qstar.kplus1, cur.node, ca
         # ======================================================================
         # force stratified CV when DV is binary
         inputs$SL.cvControl$stratifyCV <- length(unique(Y.subset)) == 2
-        # automatically set V based on effective sample size
-        inputs$SL.cvControl$V <- chooseV(Y.subset)
+        if(!"V" %in% names(inputs$SL.cvControl)){
+          # automatically set V based on effective sample size
+          inputs$SL.cvControl$V <- chooseV(Y.subset)
+        }
         # remove Intercept column
         newX.list$newX <- newX.list$newX[, !grepl("Intercept", colnames(newX.list$newX))]
         X.subset <- X.subset[, !grepl("Intercept", colnames(X.subset))]
