@@ -2700,7 +2700,7 @@ chooseV <- function(Y){
   
   # select appropriate number of folds for V-fold cross-validation
   if(n.eff < 30){
-    V <- n - 1
+    V <- n
   } else if (n.eff >= 30 & n.eff < 500){
     V <- 20
   } else if (n.eff >= 500 & n.eff < 5000){
